@@ -1,24 +1,7 @@
 import { readFile } from "node:fs/promises";
-
+import { addRow, classify } from "./tracker.js";
 
 const GAP_MINUTES = 10;
-const AIRPORT = { lat: 27.6966, lon: 85.3591};
-
-const AP_ELEV = 4390;
-const NEAR_NM = 3;
-const LOW_MARGIN_FT = 2000;
-
-// shortest distance 
-function distanceNm(lat, lon) {
-
-    const toRad = (deg) => (deg * Math.PI) / 180;
-    const dLat = toRad(lat - AIRPORT.lat);
-    const dLon = toRad(lon - AIRPORT.lon);
-    
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(AIRPORT.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon / 2) ** 2;
-
-    return 2 * 3440.065 * Math.asin(Math.sqrt(a));
-}
 
 const text = await readFile("positions.jsonl", "utf8");
 const rows = text.trim().split("\n").map((line) => JSON.parse(line));
@@ -32,7 +15,9 @@ for (const row of rows) {
     const flight = current[row.hex];
     const gap = flight === undefined ? Infinity : new Date(row.time) - new Date(flight.end);
 
-    if (gap > GAP_MINUTES * 60 * 1000) {
+    const tookOff = flight !== undefined && flight.lastAlt === 0 && typeof row.alt === "number";
+
+    if (gap > GAP_MINUTES * 60 * 1000 || tookOff) {
 
         current[row.hex] = {
 
@@ -75,25 +60,7 @@ for (const row of rows) {
 
     for (const f of flights) {
 
-        const near = f.minDist <= NEAR_NM;
-        const low = f.minAlt <= AP_ELEV + LOW_MARGIN_FT;
-
-        if (!near || !low) {
-
-            f.type = "overflight";
-        }
-        else if (f.firstAlt > f.lastAlt) {
-
-            f.type = "arrival";
-        }
-        else if (f.firstAlt < f.lastAlt) {
-
-            f.type = "departure";
-        }
-        else {
-
-            f.type = "unknown";
-        }
+        f.type = classify(f);
     }
 
 

@@ -1,14 +1,16 @@
 import { appendFile } from "node:fs/promises";
 import { createClient } from "@supabase/supabase-js";
+import { AIRPORT, addRow } from "./tracker.js";
 
 
-const AIRPORT = { code: "VNKT", lat: 27.6966, lon: 85.3591 };
 const RADIUS_NM = 80;
 const url = `https://api.adsb.lol/v2/point/${AIRPORT.lat}/${AIRPORT.lon}/${RADIUS_NM}`;
 const POLL_SECONDS = 15;
 const SUPABASE_URL = "https://knzexkjvrsoeyxxzwqxl.supabase.co";
 
 const supabase = createClient(SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
+
+const current = {};
 
 async function poll() { 
 
@@ -27,7 +29,17 @@ async function poll() {
 
         const row = { time, hex: plane.hex, flight: plane.flight, lat: plane.lat, lon: plane.lon, alt: plane.alt_baro };
         await appendFile("positions.jsonl", JSON.stringify(row) + "\n");
+
+        const ended = addRow(current, row);
+
+        if (ended) {
+
+            console.log("flight ended:", ended.callsign);
+        }
     }
+
+    console.log (Object.keys(current).length, "open flights");
+
     
     const rows = data.ac.map((plane) => ({
         
