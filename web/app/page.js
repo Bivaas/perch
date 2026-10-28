@@ -1,6 +1,16 @@
 import { supabase } from "@/lib/supabase";
 
 
+// nepal time format
+const nepalTime = new Intl.DateTimeFormat("en-GB", {
+
+  timeZone: "Asia/Kathmandu", 
+  day: "numeric",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
 export default async function Home() {
 
   const { data: flights, error } = await supabase 
@@ -31,8 +41,9 @@ export default async function Home() {
             <li key={f.id}>
 
               {f.callsign ?? f.hex} - {f.type} -{" "}
-              {f.last_seen}
               
+              {nepalTime.format(new Date(f.last_seen))}
+
             </li>
           ))}
 

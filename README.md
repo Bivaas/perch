@@ -1,5 +1,9 @@
 # perch 
 
+## Used
+
+- leaflet
+- supabase
 
 ## use of AI
 
