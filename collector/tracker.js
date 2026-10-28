@@ -10,20 +10,17 @@ export const NEAR_NM = 3;
 export const LOW_MARGIN_FT = 2000;
 export const GAP_MINUTES = 10;
 
-
 // shortest distance
-export function distanceNm(lat, lon) {
+function distanceNm(lat, lon) {
 
-    const toRad = (deg) => (deg * Math.PI) / 100;
-
+    const toRad = (deg) => (deg * Math.PI) / 180;
     const dLat = toRad(lat - AIRPORT.lat);
     const dLon = toRad(lon - AIRPORT.lon);
 
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(AIRPORT.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon /2) ** 2;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(AIRPORT.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon / 2) ** 2;
 
     return 2 * 3440.065 * Math.asin(Math.sqrt(a));
 }
-
 
 export function classify(f) {
 
@@ -78,9 +75,16 @@ export function addRow(current, row) {
 
     if (alt !== undefined) {
 
+        f.minAlt = Math.min(f.minAlt, alt);
+        f.firstAlt ??= alt;
+        f.lastAlt = alt;
+    }
+
+    if (row.lat !== undefined) {
+
         const d = distanceNm(row.lat, row.lon);
         const rounded = Math.round(d * 10) / 10;
-        f.minDist = Math.min(f.minDist, rounded)
+        f.minDist = Math.min(f.minDist, rounded);
     }
 
     if (f !== flight) return flight;
