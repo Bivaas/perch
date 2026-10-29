@@ -11,6 +11,7 @@
 
 - leaflet
 - supabase
+- recharts
 
 ## use of AI
 
