@@ -23,6 +23,8 @@ export default function MapView({ aircraft }) {
 
     return (
 
+        <>
+
         <MapContainer center={CENTER} zoom={9} style={{ height: "500px" }} >
 
             <TileLayer 
@@ -50,5 +52,23 @@ export default function MapView({ aircraft }) {
                 ))}
 
             </MapContainer>
+
+            {/*  aircraft count */}
+            <p>{aircraft.length} no of aircrafts:</p>
+
+            <ul>
+
+                {Object.entries(COLORS).map(([status, color]) => (
+
+                    <li key={status}>
+
+                            <span style={{ color }}>-</span>
+                            {status}
+
+                    </li>
+                ))}
+            </ul>
+
+            </>
     );
 }
