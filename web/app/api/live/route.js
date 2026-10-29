@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 
 const AIRPORT = "VNKT";
 const WINDOW_SECONDS = 60;
+const CLIMB_FT = 200;
 
 export async function GET() {
 
@@ -29,13 +30,37 @@ export async function GET() {
             );
         }
 
-        // newest aircraft
+        // newest aircraft with status
        const latest = {};
+       const oldest = {};
 
        for (const p of data) {
 
-        latest[p.hex] ??= p;
+            latest[p.hex] ??= p;
+            oldest[p.hex] = p;
        }
 
-       return Response.json(Object.values(latest));
+       const aircraft = Object.values(latest).map((p) => {
+
+            const change = p.alt - oldest[p.hex].alt;
+
+            let status = "cruise";
+
+            if (p.on_ground) {
+
+                status = "on ground";
+            } 
+            else if (change < -CLIMB_FT) {
+
+                status = "descend";
+            }
+            else if (change > CLIMB_FT) {
+
+                status = "climb";
+            }
+
+            return { ...p, status};
+       });
+
+       return Response.json(aircraft);
 }
