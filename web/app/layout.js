@@ -29,8 +29,9 @@ export default function RootLayout({ children }) {
             <nav>
 
                 <Link href="/">Flights</Link> -{" "}
-                <link href="/map">Live map</link>
-                <Link href="/stats">Stats</Link>
+                <link href="/map">Live map</link> -{" "}
+                <Link href="/stats">Stats</Link> -{" "}
+                <Link href="/search">Search</Link>
 
             </nav>
 
