@@ -3,43 +3,84 @@
 import Link from "next/link";
 import { useState } from "react";
 
+const GEOCODE_URL = "https://geocoding-api.open-metro.com/v1/search";
+
 export default function AirportSearch() {
 
     const [airports, setAirports] = useState([]);
     const [message, setMessage] = useState("");
+    const [query, setQuery] = useState("");
 
+
+    async function loadNearby(lat, lon, label) {
+
+        const res = await fetch (`/api/nearby?lat={${lat}&lon=${lon}`);
+        const data = await res.json();
+
+        setAirports(data);
+        setMessage(data.length
+
+            ? `Airports near ${label}:`
+            : `No airports within 100 km of ${label}`
+        );
+    }
 
     function findNearMe() {
 
-        setMessage("searching for your location...");
+        setMessage("finding location....");
 
         navigator.geolocation.getCurrentPosition(
 
-            async (position) => {
+            (position) => {
 
                 const { latitude, longitude } = position.coords;
-
-                const res = await fetch( 
-                    `/api/nearby?lat=${latitude}&lon=${longitude}`
-                );
-
-                const data = await res.json();
-
-                setAirports(data);
-                setMessage(
-                    data.length ? "" : "no airports found ! "
-                );
+                loadNearby(latitude, longitude, "your location!");
             },
-        
-            () => setMessage("location permission denied !")
+
+            () => setMessage ("No location perms!")
         );
-        
+    }
+
+    async function searchCity(event) {
+
+        event.preventDefault();
+        setMessage("searching.....");
+
+        const name = encodeURIComponent(query);
+        const res = await fetch (
+
+            `${GEOCODE_URL}?name=${name}&count=1`
+        );
+        const data = await res.json();
+        const place = data.results?.[0];
+
+        if (!place) {
+
+            setAirports([]);
+            setMessage(`no query of ${query} place found !`);
+            return;
+        }
+
+        loadNearby( place.latitude, place.longitude,
+            `${place.name}, ${place.country}`
+        );
     }
 
     return (
 
         <div>
 
+            <form onSubmit={searchCity}>
+
+                <input value={query} 
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder = "cityname" />
+
+                <button type="submit">Search</button>
+
+            </form>
+
+            {/* use my location btn */}
             <button onClick={findNearMe}>Use my location</button>
             <p>{message}</p>
 
