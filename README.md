@@ -12,7 +12,9 @@
 - leaflet
 - supabase
 - recharts
+- csv-parse
 
 ## use of AI
 
 - haversine formula and implementation
+- airport list and its ICAO 

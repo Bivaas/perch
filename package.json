@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Bivaas/perch#readme",
   "type": "module",
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0"
+    "@supabase/supabase-js": "^2.118.0",
+    "csv-parse": "^7.0.3"
   }
 }
