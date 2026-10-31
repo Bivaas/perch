@@ -28,10 +28,9 @@ export default function RootLayout({ children }) {
 
             <nav>
 
-                <Link href="/">Flights</Link> -{" "}
-                <Link href="/map">Live map</Link> -{" "}
-                <Link href="/stats">Stats</Link> -{" "}
-                <Link href="/search">Search</Link>
+                <Link href="/">Search</Link> -{" "}
+                <Link href="/airport/VNKT">Kathmandu</Link> -{" "}
+                <Link href="/airport/VNVT">Biratnagar</Link> -{" "}
 
             </nav>
 
