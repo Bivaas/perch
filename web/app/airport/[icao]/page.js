@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import LiveMap from "@/components/LiveMap";
 import { nepalTime } from "@/lib/nepalTime";
+import HourlyChart from "@/components/HourlyChart";
 
 const WATCHED = ["VNKT", "VNVT"];
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
@@ -61,6 +62,7 @@ export default async function AirportPage({ params }) {
         // recent views
         const watched = WATCHED.includes(code);
         let flights = [];
+        let hourly = [];
 
         if (watched) {
 
@@ -74,6 +76,28 @@ export default async function AirportPage({ params }) {
                 .limit (20);
             
                 flights = data ?? [];
+
+                // hour count load
+                const { data: hours } = await supabase
+
+                    .from("hourly_traffic")
+                    .select("hour, arrivals, departures")
+                    .eq("airport", code);
+
+                hourly = Array.from({ length: 24}, (_, hour) => {
+
+                    const found = (hours ?? []).find (
+
+                        (h) => h.hour === hour
+                    );
+
+                    return {
+
+                        hour: String(hour).padStart(2, "0"),
+                        arrivals: found?.arrivals ?? 0,
+                        departures: found?.departures ?? 0,
+                    };
+                });
         }
 
         // map value
@@ -99,7 +123,7 @@ export default async function AirportPage({ params }) {
                 {airport.elevation_ft ?? "unknown"} ft
             </p>
 
-            <h2>METAR</h2>
+            <h2>METAR:</h2>
             <p>
 
                 {metar ? metar.rawOb
@@ -137,6 +161,16 @@ export default async function AirportPage({ params }) {
                 )
             
             }
+
+            {/* chart */}
+            {watched && (
+                <>
+                
+                    <h2>Traffic shown on hourly basis:</h2>
+                    <HourlyChart data={hourly} />
+                
+                </>
+            )}
 
             <h2>Runways </h2>
             <ul>
