@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
+const METAR_URL = "https://aviationweather.gov/api/data/metar";
+
 export default async function AirportPage({ params }) {
 
     const { icao } = await params;
@@ -25,6 +27,32 @@ export default async function AirportPage({ params }) {
         .from("runways")
         .select("id, name, length_ft")
         .eq("icao", code);
+
+        // fetch METAR
+        let metar;
+
+        try {
+
+            const res = await fetch(
+
+                `${METAR_URL}?ids=${code}&format=json`,
+                {
+                    headers: {
+                        "User-Agent": "Perch",
+                    },
+                }
+            );
+
+            if (res.status === 200) {
+
+                const list = await res.json();
+                metar = list[0];
+            }
+
+        } catch {
+
+            console.log("METAR fetch failed !");
+        }
 
     
     return (
