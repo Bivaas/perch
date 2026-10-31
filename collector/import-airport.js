@@ -44,6 +44,7 @@ for (const r of airports) {
 
         icao,
         name: r.name,
+        city: r.municipality || null,
         country: r.iso_country,
         type: r.type,
         lat: Number(r.latitude_deg),
@@ -93,7 +94,7 @@ const runwayText = await (
     await fetch(RUNWAYS_URL)
 ).text();
 
-const runwayRows = parse(runwayText, { colums: true});
+const runwayRows = parse(runwayText, { columns: true});
 
 const runways = runwayRows .filter( 
 

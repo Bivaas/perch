@@ -10,7 +10,7 @@ export async function GET(request) {
 
     if (!lat || !lon) {
 
-        return Response.jsom(
+        return Response.json(
             {error: "lat & lon required !"},
             { status: 400}
         );

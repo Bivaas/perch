@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const GEOCODE_URL = "https://geocoding-api.open-metro.com/v1/search";
+const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 
 export default function AirportSearch() {
 
@@ -14,7 +14,7 @@ export default function AirportSearch() {
 
     async function loadNearby(lat, lon, label) {
 
-        const res = await fetch (`/api/nearby?lat={${lat}&lon=${lon}`);
+        const res = await fetch (`/api/nearby?lat=${lat}&lon=${lon}`);
         const data = await res.json();
 
         setAirports(data);

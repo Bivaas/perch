@@ -7,7 +7,7 @@ export default function SearchPage() {
         <main>
 
             <h1>Find the airport of your choice</h1>
-            <airportSearch />
+            <AirportSearch />
 
         </main>
     );

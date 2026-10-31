@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import LiveMap from "@/components/LiveMap";
 
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
 
@@ -8,7 +9,7 @@ export default async function AirportPage({ params }) {
     const { icao } = await params;
     const code = icao.toUpperCase();
 
-    const { data: airports, error } = await supabase 
+    const { data: airport, error } = await supabase 
         .from("airports")
         .select("*")
         .eq("icao", code)
@@ -23,9 +24,10 @@ export default async function AirportPage({ params }) {
         notFound();
     }
 
+    // runway endpoints
     const { data: runways } = await supabase
         .from("runways")
-        .select("id, name, length_ft")
+        .select ("id, name, length_ft, le_lat, le_lon, he_lat, he_lon")
         .eq("icao", code);
 
         // fetch METAR
@@ -54,6 +56,13 @@ export default async function AirportPage({ params }) {
             console.log("METAR fetch failed !");
         }
 
+        // map value
+        const trafficUrl = `/api/traffic?lat=${airport.lat}&lon=${airport.lon}`;
+
+        const runwayLines = runways.map((r) => [
+            [r.le_lat, r.le_lon],
+            [r.he_lat, r.he_lon],
+        ]);
     
     return (
 
@@ -69,6 +78,20 @@ export default async function AirportPage({ params }) {
                 {airport.city}, {airport.country} - elevation{" "}
                 {airport.elevation_ft ?? "unknown"} ft
             </p>
+
+            <h2>METAR</h2>
+            <p>
+
+                {metar ? metar.rawOb
+                        : "no METAR available for this airport !"}
+
+            </p>
+
+            {/*  map */}
+            <h2>Live traffic</h2>
+
+            <LiveMap key={airport.icao} url={trafficUrl} center={[airport.lat, airport.lon]} runways={runwayLines} />
+
 
             <h2>Runways </h2>
             <ul>

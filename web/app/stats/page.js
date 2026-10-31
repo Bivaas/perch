@@ -39,9 +39,11 @@ export default async function StatsPage() {
             <h1>hourly traffic</h1>
             <p>Nepal time</p>
 
+            <HourlyChart data={allHours} />
+
             <table> 
 
-                <thread> 
+                <thead> 
 
                     <tr>
 
@@ -50,7 +52,7 @@ export default async function StatsPage() {
                         <th>Departures</th>
 
                     </tr>
-                </thread>
+                </thead>
 
                 <tbody>
 
