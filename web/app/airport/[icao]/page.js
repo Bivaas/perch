@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import LiveMap from "@/components/LiveMap";
+import { nepalTime } from "@/lib/nepalTime";
 
+const WATCHED = ["VNKT", "VNVT"];
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
 
 export default async function AirportPage({ params }) {
@@ -56,6 +58,24 @@ export default async function AirportPage({ params }) {
             console.log("METAR fetch failed !");
         }
 
+        // recent views
+        const watched = WATCHED.includes(code);
+        let flights = [];
+
+        if (watched) {
+
+            const { data } = await supabase
+
+                .from("flights")
+                .select("id, hex, callsign, type, last_seen")
+                .eq("airport", code)
+                .in ("type", ["arrival", "departure"])
+                .order("last_seen", { ascending: false })
+                .limit (20);
+            
+                flights = data ?? [];
+        }
+
         // map value
         const trafficUrl = `/api/traffic?lat=${airport.lat}&lon=${airport.lon}`;
 
@@ -92,6 +112,31 @@ export default async function AirportPage({ params }) {
 
             <LiveMap key={airport.icao} url={trafficUrl} center={[airport.lat, airport.lon]} runways={runwayLines} />
 
+            {/* show list */}
+            <h2>Recent arrivals and departure:</h2>
+
+            {!watched ? (
+                <p>History is only for VNKT & VNVT</p> )
+
+                : flights.length === 0 ? (
+                    
+                    <p>No finished flights recorded till now</p> 
+                ) : (
+                    <ul>
+
+                        {flights.map((f) => (
+
+                            <li key={f.id}>
+
+                                {f.callsign ?? f.hex} - {f.type} -{" "}
+                                {nepalTime.format(new Date(f.last_seen))
+                                }
+                            </li>
+                        ))}
+                    </ul>
+                )
+            
+            }
 
             <h2>Runways </h2>
             <ul>
