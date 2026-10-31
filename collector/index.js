@@ -2,6 +2,8 @@ import { createClient } from "@supabase/supabase-js";
 import { AIRPORT, addRow, GAP_MINUTES, classify } from "./tracker.js";
 
 
+const AIRPORT = AIRPORTS[0];
+
 const RADIUS_NM = 80;
 const url = `https://api.adsb.lol/v2/point/${AIRPORT.lat}/${AIRPORT.lon}/${RADIUS_NM}`;
 const POLL_SECONDS = 15;
@@ -31,7 +33,7 @@ async function poll() {
 
         const row = { time, hex: plane.hex, flight: plane.flight, lat: plane.lat, lon: plane.lon, alt: plane.alt_baro };
 
-        const ended = addRow(current, row);
+        const ended = addRow(current, row, AIRPORT);
 
         if (ended) finished.push(ended);
     }
@@ -49,7 +51,7 @@ async function poll() {
 
     for (const f of finished) {
 
-        console.log("finished:", f.callsign, classify(f));
+        console.log ("finished:", f.callsign, classify(f, AIRPORT));
     }
 
     console.log (Object.keys(current).length, "open flights");
@@ -86,7 +88,7 @@ async function poll() {
                 min_dist_nm: f.minDist,
                 first_alt: f.firstAlt,
                 last_alt: f.lastAlt,
-                type: classify(f),
+                type: classify(f, AIRPORT),
             }));
 
             const { error: flightError } = await supabase

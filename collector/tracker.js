@@ -1,31 +1,38 @@
-export const AIRPORT = {
+export const AIRPORTS = [
+    {
+        code: "VNKT",
+        lat: 27.6966,
+        lon: 85.3591,
+        elev: 4390,
+    },
+    {
+        code: "VNVT",
+        lat: 26.4815,
+        lon: 87.264,
+        elev: 236,
+    },
+];
 
-    code: "VNKT",
-    lat: 27.6966,
-    lon: 85.3591,
-};
-
-export const AP_ELEV = 4390;
 export const NEAR_NM = 3;
 export const LOW_MARGIN_FT = 2000;
 export const GAP_MINUTES = 10;
 
 // shortest distance
-function distanceNm(lat, lon) {
+function distanceNm (lat, lon, airport) {
 
     const toRad = (deg) => (deg * Math.PI) / 180;
-    const dLat = toRad(lat - AIRPORT.lat);
-    const dLon = toRad(lon - AIRPORT.lon);
+    const dLat = toRad(lat - airport.lat);
+    const dLon = toRad(lon - airport.lon);
 
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(AIRPORT.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon / 2) ** 2;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(airport.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon / 2) ** 2;
 
     return 2 * 3440.065 * Math.asin(Math.sqrt(a));
 }
 
-export function classify(f) {
+export function classify(f, airport) {
 
     const near = f.minDist <= NEAR_NM;
-    const low = f.minAlt <= AP_ELEV + LOW_MARGIN_FT;
+    const low = f.minAlt <= airport.elev + LOW_MARGIN_FT;
 
     if (!near || !low ) return "overflight";
 
@@ -39,7 +46,7 @@ export function classify(f) {
 }
 
 
-export function addRow(current, row) {
+export function addRow(current, row, airport) {
 
     const flight = current[row.hex];
 
@@ -82,7 +89,7 @@ export function addRow(current, row) {
 
     if (row.lat !== undefined) {
 
-        const d = distanceNm(row.lat, row.lon);
+        const d = distanceNm(row.lat, row.lon, airport);
         const rounded = Math.round(d * 10) / 10;
         f.minDist = Math.min(f.minDist, rounded);
     }

@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
-import { addRow, classify } from "./tracker.js";
+import { AIRPORTS, addRow, classify } from "./tracker.js";
 
+
+const AIRPORT = AIRPORTS[0];
 
 const text = await readFile("positions.jsonl", "utf8");
 const rows = text.trim().split("\n").map((line) => JSON.parse(line));
@@ -11,7 +13,7 @@ const current = {};
 
 for (const row of rows) {
 
-    const ended = addRow(current, row);
+    const ended = addRow (current, row, AIRPORT);
     if (ended) flights.push(ended);
 }
 
@@ -19,7 +21,7 @@ flights.push(...Object.values(current));
 
     for (const f of flights) {
 
-        f.type = classify(f);
+        f.type = classify(f, AIRPORT);
     }
 
 
