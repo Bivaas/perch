@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+
   title: "Perch",
-  description: "read airport traffic",
+  description: "see live traffic, Airport METAR and flight history",
 };
 
 export default function RootLayout({ children }) {
@@ -26,15 +27,43 @@ export default function RootLayout({ children }) {
       
         <body className="min-h-full flex flex-col">
 
-            <nav>
+            {/* top navbar */}
+            <header className= "border-b border-slate-200 bg-white">
 
-                <Link href="/">Search</Link> -{" "}
-                <Link href="/airport/VNKT">Kathmandu</Link> -{" "}
-                <Link href="/airport/VNVT">Biratnagar</Link> -{" "}
+              <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
 
-            </nav>
+                <Link href="/" className="text-2xl font-bold text-sky-600" >
+                  Perch
+                </Link>
 
-            {children}
+                <div className="flex gap-4 text-sm">
+
+                  <Link href="/" className="hover:text-sky-600">
+                  
+                    Search
+                  </Link>
+
+                  <Link href="/airport/VNKT" className="hover:text-sky-600">
+                  
+                    Kathmandu
+                  </Link>
+
+                  <Link href="/airport/VNVT" className="hover:text-sky-600" >
+                  
+                    Biratnagar
+                  </Link>
+
+                </div>
+
+              </nav>
+
+            </header>
+
+            {/* page */}
+            <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+
+              {children}
+            </div>
 
         </body>
 
