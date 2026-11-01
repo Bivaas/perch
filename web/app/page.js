@@ -4,12 +4,18 @@ export default function Home() {
 
   return (
 
-    <main>
+      <main>
 
-      <h1>Perch</h1>
-      <p>Find an airport of your choice to see traffic</p>
-      <AirportSearch />
+        <h1 className="text-2xl font-bold sm:text-3xl">
+          Find any airport..
+        </h1>
 
-    </main>
+        <p className ="mt-1 text-slate-600"> Search with a cityname and choose your desired airport
+        </p>
+
+        <AirportSearch />
+
+      </main>
+
   );
 }
