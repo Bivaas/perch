@@ -12,7 +12,30 @@ const COLORS = {
     "on ground": "#6b7280",
 }
 
+const RING_COLORS = {
+
+    degraded: "red",
+    mismatch: "orange",
+}
+
 export default function MapView ({ aircraft, center, runways }) {
+
+    // nacp & alt
+    const flagged = aircraft.filter(
+
+        (a) => RING_COLORS[a.gps]
+    );
+
+    const degraded = flagged.filter(
+
+        (a) => a.gps === "degraded"
+    );
+
+    const mismatch = flagged.filter(
+
+        (a) => a.gps === "mismatch"
+    );
+    
 
     return (
 
@@ -31,6 +54,23 @@ export default function MapView ({ aircraft, center, runways }) {
                     <Polyline key={i} positions={r} pathOptions={{ color: "black", weight: 4 }}/>
                 ))}
 
+                {/* accuracy ring */}
+                {flagged.map((a) => (
+
+                    <CircleMarker 
+
+                        key={`gps-${a.hex}`}
+                        center={[a.lat, a.lon]}
+                        radius={11}
+                        pathOptions={{
+
+                            color: RING_COLORS[a.gps],
+                            dashArray: "4",
+                            fill: false,
+                }} />
+
+                ))}
+
                 {/* single dot */}
                 {aircraft.map((a) => (
 
@@ -41,6 +81,8 @@ export default function MapView ({ aircraft, center, runways }) {
                             {a.flight ?? a.hex} -{" "}
                             {a.on_ground ? "ground" : `${a.alt} ft`} -{" "}
                             {a.status}
+                            {a.gps === "degraded" && ` - GPS degraded (with NACp of ${a.nacp} )` }
+                            {a.gps === "mismatch" && ` - GPS/pressure altitude gap ${a.altGap} ft`}
 
                         </Tooltip>
 
@@ -50,7 +92,9 @@ export default function MapView ({ aircraft, center, runways }) {
             </MapContainer>
 
             {/*  aircraft count */}
-            <p>{aircraft.length} no of aircrafts:</p>
+            <p>{aircraft.length} Total aircrafts:</p>
+            <p>{degraded.length} planes with degraded GPS</p>
+            <p>{mismatch.length} planes with altitude mismatch</p>
 
             <ul>
 
@@ -58,11 +102,23 @@ export default function MapView ({ aircraft, center, runways }) {
 
                     <li key={status}>
 
-                            <span style={{ color }}>-</span>
+                            <span style={{ color }}>|| </span>
                             {status}
 
                     </li>
                 ))}
+
+                <li>
+
+                    <span style={{ color: "red" }}>|| </span>
+                    degraded GPS
+                </li>
+
+                <li> 
+
+                    <span style={{ color: "orange" }}>|| </span>
+                    altitude mismatch
+                </li>
             </ul>
 
             </>

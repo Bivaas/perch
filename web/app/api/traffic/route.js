@@ -3,6 +3,8 @@ import { cacheLife } from "next/cache";
 const ADSB_URL = "https://api.adsb.lol/v2/point";
 const RADIUS = 40;
 const CLIMB = 300;
+const GAP_BASE = 1500;
+const GAP_RATIO = 0.1;
 
 // 15 sec traffic cache
 async function getTraffic(lat, lon) {
@@ -38,6 +40,29 @@ async function getTraffic(lat, lon) {
                 status = "climb";
             }
 
+            // nav accuracy
+            let gps = "unknown";
+            if (a.nac_p !== undefined) {
+
+                gps = a.nac_p >= 8 ? "ok" : "degraded";
+            }
+
+            // alt mismatch
+            let altGap;
+            if (
+                typeof a.alt_baro === "number" && a.alt_geom !== undefined 
+            ) 
+            {
+                altGap = a.alt_geom - a.alt_baro;
+
+                const limit = GAP_BASE + GAP_RATIO * a.alt_baro;
+
+                if ( gps !== "degraded" && Math.abs(altGap) > limit) {
+
+                    gps = "mismatch";
+                }
+            }
+
             return {
 
                 hex: a.hex,
@@ -47,6 +72,9 @@ async function getTraffic(lat, lon) {
                 alt: onGround ? null : a.alt_baro,
                 on_ground: onGround,
                 status,
+                gps,
+                nacp: a.nac_p,
+                altGap,
             };
         });
 

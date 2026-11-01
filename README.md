@@ -17,6 +17,11 @@ watch airplanes and be obsessed with aviation !
 - csv-parse
 - LiveMap
 
+## Limitation
+
+- dependent on adsb.lol for all aircraft data
+- rate limit from adsb.lol when user count increases
+
 ## use of AI
 
 - haversine formula and implementation
