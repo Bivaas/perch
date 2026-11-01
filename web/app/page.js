@@ -10,7 +10,7 @@ export default function Home() {
           Find any airport..
         </h1>
 
-        <p className ="mt-1 text-slate-600"> Search with a cityname and choose your desired airport
+        <p className ="mt-1 text-slate-650"> Search with a cityname and choose your desired airport
         </p>
 
         <AirportSearch />

@@ -5,6 +5,13 @@ import { nepalTime } from "@/lib/nepalTime";
 import HourlyChart from "@/components/HourlyChart";
 
 const WATCHED = ["VNKT", "VNVT"];
+
+const TY_STYLE = {
+
+    arrival: "bg-blue-50 text-blue-700",
+    departure: "bg-green-50 text-green-700",
+};
+
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
 
 export default async function AirportPage({ params }) {
@@ -110,79 +117,131 @@ export default async function AirportPage({ params }) {
     
     return (
 
-        <main>
-            <h1>
+        <main className="space-y-4">
 
-                {airport.icao} - {airport.name}
+            <div>
+                <h1 className="text-2xl font-bold">
 
-            </h1>
+                    <span className="font-mono text-sky-800">{airport.icao}</span>
+                        {" "} {airport.name}
+                </h1>
 
-            <p>
+                <p className="mt-1 text-slate-800">
 
-                {airport.city}, {airport.country} - elevation{" "}
-                {airport.elevation_ft ?? "unknown"} ft
-            </p>
+                    {airport.city}, {airport.country}
+                    {" - "}elevation{" "}
+                    {airport.elevation_ft ?? "unknown"}
+                </p>
 
-            <h2>METAR:</h2>
-            <p>
+            </div>
 
-                {metar ? metar.rawOb
-                        : "no METAR available for this airport !"}
+            <Section title="METAR">
 
-            </p>
+                <p className="break-words text-sm">
 
-            {/*  map */}
-            <h2>Live traffic</h2>
+                    {metar ? metar.rawOb 
+                        : "No METAR available for this airport"}
+                </p>
 
-            <LiveMap key={airport.icao} url={trafficUrl} center={[airport.lat, airport.lon]} runways={runwayLines} />
+            </Section>
+
+            {/* map */}
+            <Section title="live traffic:">
+
+                    <LiveMap 
+                        key={airport.icao}
+                        url={trafficUrl}
+                        center={[airport.lat, airport.lon]}
+                        runways={runwayLines} 
+                    />
+
+            </Section>
 
             {/* show list */}
-            <h2>Recent arrivals and departure:</h2>
+           <Section title="recent arrivals and departures:">
 
-            {!watched ? (
-                <p>History is only for VNKT & VNVT</p> )
+                    {!watched ? (
+                        <p>history is only for VNKT and VNVT</p>
+                    ) : flights.length === 0 ? (
 
-                : flights.length === 0 ? (
-                    
-                    <p>No finished flights recorded till now</p> 
-                ) : (
-                    <ul>
+                        <p className="text-sm text-slate-500">No finished flights so far</p>
+                    ) : (
 
-                        {flights.map((f) => (
+                        <ul className="divide-y divide-slate-100">
 
-                            <li key={f.id}>
+                             {flights.map((f) => (
 
-                                {f.callsign ?? f.hex} - {f.type} -{" "}
-                                {nepalTime.format(new Date(f.last_seen))
-                                }
-                            </li>
-                        ))}
-                    </ul>
-                )
-            
-            }
+                                <li key={f.id} className="flex items-center gap-3 py-2 text-sm" >
 
-            {/* chart */}
+                                    <span className="flex-1 font-mono font-medium">{f.callsign ?? f.hex}</span>
+
+                                    <span className={`rounded-full px-2 py-0.5 text-xs ${TY_STYLE[f.type]}`}> {f.type} </span>
+
+                                    <span className="w-24 text-right text-slate-500">
+
+                                        {nepalTime.format(
+                                            new Date(f.last_seen)
+                                        )}
+                                    </span>
+                                </li>
+                             ))}
+                        </ul>
+                    )
+                    }
+
+           </Section>
+
+           {/* chart */}
             {watched && (
-                <>
-                
-                    <h2>Traffic shown on hourly basis:</h2>
+
+                <Section title="traffic by hourly basis:">
+
                     <HourlyChart data={hourly} />
-                
-                </>
-            )}
 
-            <h2>Runways </h2>
-            <ul>
+                </Section>
+                )}
 
-                {runways.map((r) => (
+                <Section title="Runway info:">
 
-                    <li key={r.id}>
-                        {r.name} - {r.length_ft ?? "?"} ft
-                    </li>
-                ))}
-            </ul>
+                    {runways.length === 0 ? (
+                        
+                        <p className= "text-sm tet-slate-500">No runway data available :( </p>
+                        
+                    ) : (
+                        <ul className="space-y-1 text-sm">
+
+                            {runways.map((r) => (
+
+                                <li key={r.id}>
+
+                                    <span className="font-mono">{r.name}</span>
+
+                                    {" - "}
+                                    {r.length_ft ?? "?"} ft
+                                </li>
+                            ))}
+                        </ul>
+                    )
+                        }
+
+                </Section>
+
+
 
         </main>
+    );
+}
+
+function Section({ title, children }) {
+
+    return (
+
+        <section className="border-none p-4">
+
+            <h2 className="mb-3 font-bold">{title}</h2>
+
+            {children}
+
+        </section>
     );
 }
