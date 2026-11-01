@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { AIRPORT, addRow, GAP_MINUTES, classify } from "./tracker.js";
+import { AIRPORTS, addRow, GAP_MINUTES, classify } from "./tracker.js";
 
 
 const RADIUS = 60;
