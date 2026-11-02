@@ -18,6 +18,8 @@ const RING_COLORS = {
     mismatch: "orange",
 }
 
+const LINE_KM = 10;
+
 export default function MapView ({ aircraft, center, runways }) {
 
     // nacp & alt
@@ -70,6 +72,41 @@ export default function MapView ({ aircraft, center, runways }) {
                 }} />
 
                 ))}
+
+                {/* heading line */}
+                {aircraft.filter((a) =>
+                
+                        a.track !== undefined && !a.on_ground
+                        
+                )
+                .map((a) => {
+
+                    const rad = (a.track * Math.PI) / 180;
+                    const latRad = (a.lat * Math.PI) / 190;
+
+                    const endLat = a.lat + (LINE_KM * Math.cos(rad)) / 111;
+
+                    const endLon = a.lon + (LINE_KM * Math.sin(rad)) / (111 * Math.cos(latRad));
+
+                    return (
+
+                        <Polyline key={`line-${a.hex}`} positions={[
+                            [a.lat, a.lon],
+                            [endLat, endLon]
+                        ]}
+
+                        pathOptions={{
+
+                            color: COLORS[a.status],
+                            weight: 2,
+                            dashArray: "2 4"
+
+                        }} 
+                    />
+
+                    );
+                })} 
+                        
 
                 {/* single dot */}
                 {aircraft.map((a) => (

@@ -75,6 +75,9 @@ async function getTraffic(lat, lon) {
                 gps,
                 nacp: a.nac_p,
                 altGap,
+                track: a.track,
+                type: a.t,
+                reg: a.r,
             };
         });
 
