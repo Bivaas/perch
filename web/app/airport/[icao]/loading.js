@@ -1,4 +1,11 @@
 export default function Loading() {
 
-    return <p>Loading airports....</p>;
+    return (
+
+        <div className = "animate-pulse space-y-4">
+
+            <p className="text-center text-4xl">loading airport....</p>
+
+        </div> 
+    );
 }

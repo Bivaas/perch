@@ -1,4 +1,10 @@
 export default function Loading() {
 
-    return <p>Loading ...</p>;
+    return (
+        <p className="animate-pulse py-16 text-center">
+
+            Loading.....
+
+        </p>
+    );
 }
