@@ -92,10 +92,6 @@ export default function MapView ({ aircraft, center, runways }) {
             </MapContainer>
 
             {/*  aircraft count */}
-            {/* <p>{aircraft.length} Total aircrafts:</p>
-                <p>{degraded.length} planes with degraded GPS</p>
-                <p>{mismatch.length} planes with altitude mismatch</p> */}
-
             <div className="mt-3 flex flex-wrap gap-2 text-sm font-bold">
 
                 <span className="rounded-full px-5 py-1">{aircraft.length} total aircrafts</span>
@@ -106,30 +102,6 @@ export default function MapView ({ aircraft, center, runways }) {
 
             </div>
 
-            {/* <ul>
-
-                {Object.entries(COLORS).map(([status, color]) => (
-
-                    <li key={status}>
-
-                            <span style={{ color }}>|| </span>
-                            {status}
-
-                    </li>
-                ))}
-
-                <li>
-
-                    <span style={{ color: "red" }}>|| </span>
-                    degraded GPS
-                </li>
-
-                <li> 
-
-                    <span style={{ color: "orange" }}>|| </span>
-                    altitude mismatch
-                </li>
-            </ul> */}
 
             <ul className="mt-3 flex flex-wrap gap-x-8 gap-y-1" >
 
