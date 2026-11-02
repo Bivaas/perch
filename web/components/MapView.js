@@ -41,7 +41,7 @@ export default function MapView ({ aircraft, center, runways }) {
 
         <>
 
-        <MapContainer center={center} zoom={9} style={{ height: "500px" }} >
+        <MapContainer center={center} zoom={9} className="h-80 rounded-lg sm:h-[28rem]" >
 
             <TileLayer 
 
@@ -81,7 +81,7 @@ export default function MapView ({ aircraft, center, runways }) {
                             {a.flight ?? a.hex} -{" "}
                             {a.on_ground ? "ground" : `${a.alt} ft`} -{" "}
                             {a.status}
-                            {a.gps === "degraded" && ` - GPS degraded (with NACp of ${a.nacp} )` }
+                            {a.gps === "degraded" && ` - GPS degraded (with NACp ${a.nacp} )` }
                             {a.gps === "mismatch" && ` - GPS/pressure altitude gap ${a.altGap} ft`}
 
                         </Tooltip>
@@ -92,11 +92,21 @@ export default function MapView ({ aircraft, center, runways }) {
             </MapContainer>
 
             {/*  aircraft count */}
-            <p>{aircraft.length} Total aircrafts:</p>
-            <p>{degraded.length} planes with degraded GPS</p>
-            <p>{mismatch.length} planes with altitude mismatch</p>
+            {/* <p>{aircraft.length} Total aircrafts:</p>
+                <p>{degraded.length} planes with degraded GPS</p>
+                <p>{mismatch.length} planes with altitude mismatch</p> */}
 
-            <ul>
+            <div className="mt-3 flex flex-wrap gap-2 text-sm font-bold">
+
+                <span className="rounded-full px-5 py-1">{aircraft.length} total aircrafts</span>
+
+                <span className="rounded-full px-6 py-1">{degraded.length} planes has degraded GPS</span>
+
+                <span className="rounded-full px-6 py-1"> {mismatch.length} planes has altitude mismatch</span>
+
+            </div>
+
+            {/* <ul>
 
                 {Object.entries(COLORS).map(([status, color]) => (
 
@@ -119,6 +129,31 @@ export default function MapView ({ aircraft, center, runways }) {
                     <span style={{ color: "orange" }}>|| </span>
                     altitude mismatch
                 </li>
+            </ul> */}
+
+            <ul className="mt-3 flex flex-wrap gap-x-8 gap-y-1" >
+
+                {Object.entries(COLORS).map(([status, color]) => (
+
+                    <li key={status}  className="flex items-center gap-1.5" >
+
+                        <span className="h-2.5 w-1.5 " style={{ backgroundColor: color }} />
+                            = {status}
+                    </li>
+                ))}
+
+                <li className="flex items-center gap-1.5">
+
+                    <span className="h-3 w-3 rounded-full border-2 border-dashed border-red-500 gap-x-4" />
+                    = degraded GPS
+                </li>
+
+                <li className="flex items-center gap-1.5">
+
+                    <span className="h-3 w-3 rounded-full border-2 border-dashed border-orange-500" />
+                    = altitude mismatch
+                </li>
+
             </ul>
 
             </>

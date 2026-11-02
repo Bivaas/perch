@@ -8,8 +8,8 @@ const WATCHED = ["VNKT", "VNVT"];
 
 const TY_STYLE = {
 
-    arrival: "bg-blue-50 text-blue-700",
-    departure: "bg-green-50 text-green-700",
+    arrival: "text-blue-700",
+    departure: "text-green-700",
 };
 
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
@@ -164,10 +164,10 @@ export default async function AirportPage({ params }) {
                         <p>history is only for VNKT and VNVT</p>
                     ) : flights.length === 0 ? (
 
-                        <p className="text-sm text-slate-500">No finished flights so far</p>
+                        <p className="text-sm">No finished flights so far</p>
                     ) : (
 
-                        <ul className="divide-y divide-slate-100">
+                        <ul className="divide-y">
 
                              {flights.map((f) => (
 
@@ -175,9 +175,9 @@ export default async function AirportPage({ params }) {
 
                                     <span className="flex-1 font-mono font-medium">{f.callsign ?? f.hex}</span>
 
-                                    <span className={`rounded-full px-2 py-0.5 text-xs ${TY_STYLE[f.type]}`}> {f.type} </span>
+                                    <span className={`rounded-full px-2 py-0.5 text-sm ${TY_STYLE[f.type]}`}> {f.type} </span>
 
-                                    <span className="w-24 text-right text-slate-500">
+                                    <span className="w-24 text-right">
 
                                         {nepalTime.format(
                                             new Date(f.last_seen)
