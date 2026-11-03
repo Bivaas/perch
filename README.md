@@ -1,8 +1,8 @@
 # perch 
 
-watch live airplanes traffic, METAR and flight history for VNVT and VNKT. You can also search for any city then select the desired airport and view live aircraft traffic around the airport along with METAR of that specific airport. 
+watch live airplanes traffic, METAR and flight history for VNKT. You can also search for any city then select the desired airport and view live aircraft traffic around the airport along with METAR of that specific airport. 
 
-I have included two of the airports VNKT and VNVT because one of them is the only operational international airport of Kathmandu and the other is my hometown airport. Only those airports keep flight history due to limited server storage.
+I have included two of the airports VNKT because its the only operational international airport of Nepal. Flight history of VNKT is only stored due to storage limitation.
 
 I've included GPS accuracy indicator because a lot of ATR and regional aircraft's positioning are really inaccurate so this tells us whether to trust the position or not.
 
@@ -11,8 +11,9 @@ I've included GPS accuracy indicator because a lot of ATR and regional aircraft'
 - search airport with cityname or current location.
 - 10 airports within 100km radius with ICAO code can be displayed.
 - Live airtraffic around the airport 
-- METAR of selected airport
+- METAR of selected airport and decoded version
 - inaccurate GPS indicator and altitude mismatch indicator
+- View airplane type, registration and airline name
 
 ## How it works
 
@@ -40,3 +41,4 @@ I used AI when asking help to get airport list and its ICAO since its very huge 
 - ourairports.com
 - open-meteo.com
 - openstreetmap.org
+- openflights.org

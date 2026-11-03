@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
             {/* top navbar */}
             <header className= "border-b border-slate-200 bg-white">
 
-              <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+              <nav className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3">
 
                 <Link href="/" className="text-2xl font-bold text-sky-600" >
                   Perch
@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
             </header>
 
             {/* page */}
-            <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">
+            <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
 
               {children}
             </div>
