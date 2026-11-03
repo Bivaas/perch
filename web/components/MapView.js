@@ -82,7 +82,7 @@ export default function MapView ({ aircraft, center, runways }) {
                 .map((a) => {
 
                     const rad = (a.track * Math.PI) / 180;
-                    const latRad = (a.lat * Math.PI) / 190;
+                    const latRad = (a.lat * Math.PI) / 180;
 
                     const endLat = a.lat + (LINE_KM * Math.cos(rad)) / 111;
 
@@ -116,13 +116,13 @@ export default function MapView ({ aircraft, center, runways }) {
                         <Tooltip>
 
                             {a.flight ?? a.hex} -{" "}
+                            {a.airline && `${a.airline} -`}
+                            {a.type && `${a.type} - `}
+                            {a.reg && `${a.reg} - `}
                             {a.on_ground ? "ground" : `${a.alt} ft`} -{" "}
                             {a.status}
                             {a.gps === "degraded" && ` - GPS degraded (with NACp ${a.nacp} )` }
                             {a.gps === "mismatch" && ` - GPS/pressure altitude gap ${a.altGap} ft`}
-                            {a.airline && `${a.airline} -`}
-                            {a.type && `${a.type} - `}
-                            {a.reg && `${a.reg} - `}
 
                         </Tooltip>
 

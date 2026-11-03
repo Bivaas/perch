@@ -48,9 +48,9 @@ export default function RootLayout({ children }) {
                     Kathmandu
                   </Link>
 
-                  <Link href="/airport/VNVT" className="hover:text-sky-600" >
+                  <Link href="/airport/OMDB" className="hover:text-sky-600" >
                   
-                    Biratnagar
+                    Dubai
                   </Link>
 
                 </div>

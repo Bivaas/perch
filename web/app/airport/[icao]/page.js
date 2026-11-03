@@ -4,7 +4,7 @@ import LiveMap from "@/components/LiveMap";
 import { nepalTime } from "@/lib/nepalTime";
 import HourlyChart from "@/components/HourlyChart";
 
-const WATCHED = ["VNKT", "VNVT"];
+const WATCHED = ["VNKT"];
 
 const TY_STYLE = {
 
@@ -231,7 +231,7 @@ export default async function AirportPage({ params }) {
            <Section title="recent arrivals and departures:">
 
                     {!watched ? (
-                        <p>history is only for VNKT and VNVT</p>
+                        <p>history is only for VNKT</p>
                     ) : flights.length === 0 ? (
 
                         <p className="text-sm">No finished flights so far</p>
@@ -243,12 +243,11 @@ export default async function AirportPage({ params }) {
 
                                 <li key={f.id} className="flex items-center gap-3 py-2 text-sm" >
 
-                                    <span className="flex-1 font-mono font-medium">
+                                    <span className="flex-1 font-medium">
                                         
-                                        {f.callsign ?? f.hex} -{" "}
+                                        {f.callsign ?? f.hex}
                                         {names[f.callsign?.slice(0, 3)] &&
                                             `${names[f.callsign.slice(0, 3)]} -`}
-                                        {f.type} -{" "} 
                                         
                                     </span>
 
