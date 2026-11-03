@@ -1,4 +1,5 @@
 import { parse } from "csv-parse/sync";
+import { createClient } from "@supabase/supabase-js";
 
 const AIRLINES = "https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat";
 
@@ -6,6 +7,9 @@ const SEARCH = [
 
     "id", "name", "alias", "iata", "icao", "callsign", "country", "active" 
 ];
+
+const SUPABASE = "https://knzexkjvrsoeyxxzwqxl.supabase.co"
+const SIZE = 1000;
 
 const res = await fetch(AIRLINES);
 const text = await res.text();
@@ -34,4 +38,26 @@ for (const r of rows) {
     }))
 
     console.log(`${records.length} unique codes`);
-    console.log(records.filter((r) => r.country === "Nepal" ));
+    
+    const supabase = createClient(
+
+        SUPABASE,
+        process.env.SUPABASE_SECRET_KEY
+    );
+
+    for (let i = 0; i < records.length; i += SIZE) {
+
+        const batch = records.slice(i, i + SIZE)
+
+        const { error } = await supabase 
+            .from("airlines")
+            .upsert(batch);
+
+        if (error) {
+
+            console.log (error.message);
+            break;
+        }
+
+        console.log (`${i + batch.length} records saved!`);
+    }
