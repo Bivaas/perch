@@ -13,8 +13,8 @@ export const AIRPORTS = [
     },
 ];
 
-export const NEAR_NM = 3;
-export const LOW_MARGIN_FT = 2000;
+export const NEAR_NM = 13;
+export const LOW_MARGIN_FT = 7000;
 export const GAP_MINUTES = 10;
 
 // shortest distance
@@ -34,7 +34,7 @@ export function classify(f, airport) {
     const near = f.minDist <= NEAR_NM;
     const low = f.minAlt <= airport.elev + LOW_MARGIN_FT;
 
-    if (!near || !low ) return "overflight";
+    if (!near || !low ) return "other";
 
     if (f.firstAlt > f.lastAlt) return "arrival";
 
