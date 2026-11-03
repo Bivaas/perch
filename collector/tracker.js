@@ -4,13 +4,7 @@ export const AIRPORTS = [
         lat: 27.6966,
         lon: 85.3591,
         elev: 4390,
-    },
-    {
-        code: "VNVT",
-        lat: 26.4815,
-        lon: 87.264,
-        elev: 236,
-    },
+    }
 ];
 
 export const NEAR_NM = 13;
