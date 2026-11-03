@@ -14,6 +14,16 @@ const TY_STYLE = {
 
 const METAR_URL = "https://aviationweather.gov/api/data/metar";
 
+const CLOUD_TYPES = {
+
+    FEW: "few",
+    SCT: "scattered",
+    BKN: "broken",
+    OVC: "overcast",
+    CLR: "clear",
+    CAVOK: "no significant cloud"
+};
+
 export default async function AirportPage({ params }) {
 
     const { icao } = await params;
@@ -159,6 +169,49 @@ export default async function AirportPage({ params }) {
                     {metar ? metar.rawOb 
                         : "No METAR available for this airport"}
                 </p>
+
+                {/* wind */}
+                {metar && (
+                    <ul>
+                        <li>
+
+                            Wind: {" "}
+                            {metar.wspd === 0
+                                ? "calm"
+                                : metar.wdir === "VRB"
+                                ? `variable at ${metar.wspd} kt`
+                                : `${metar.wdir} ° at ${metar.wspd} kt`}
+                            {metar.wgst && ` gusting at ${metar.wgst} kt`}
+
+                        </li>
+
+                        <li>
+                            temperature: {metar.temp}°c and dew point{" "}
+                            {metar.dewp ?? "?"}°c
+                        </li>
+
+                        <li>QNH: {metar.altim}</li>
+
+                        <li>
+                            clouds: {" "}
+                            {metar.clouds.length === 0
+                            
+                                ? "none reported"
+                                : metar.clouds
+                                    .map((c) => {
+                                        const name = CLOUD_TYPES[c.cover] ?? c.cover;
+
+                                        return c.base
+                                            ? `${name} at ${c.base} ft`
+                                            : name;
+                                        
+                                    })    
+                                    .join(", ")}
+                            
+                        </li>
+
+                    </ul>
+                )}
 
             </Section>
 
