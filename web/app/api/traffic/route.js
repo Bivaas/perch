@@ -1,4 +1,5 @@
 import { cacheLife } from "next/cache";
+import { supabase} from "@/lib/supabase";
 
 const ADSB_URL = "https://api.adsb.lol/v2/point";
 const RADIUS = 40;
@@ -19,7 +20,7 @@ async function getTraffic(lat, lon) {
 
     const data = await res.json();
 
-    return data.ac 
+    const aircraft = data.ac
         .filter((a) => a.lat !== undefined)
         .map((a) => {
 
@@ -81,6 +82,28 @@ async function getTraffic(lat, lon) {
             };
         });
 
+
+        const prefixes = aircraft
+
+            .filter((a) => /^[A-Z]{3}[0-9]/.test(a.flight ?? ""))
+            .map((a) => a.flight.slice(0, 3));
+
+        const { data: airlines } = await supabase
+
+            .from("airlines")
+            .select("icao, name")
+            .in("icao", prefixes);
+
+        const names = {};
+
+        for (const al of airlines ?? []) {
+            names[al.icao] = al.name;
+        }
+
+        return aircraft.map((a) => ({
+            ...a,
+            airline: names[a.flight?.slice(0, 3)],
+        }));
 }
 
 export async function GET(request) {

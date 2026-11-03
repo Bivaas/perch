@@ -120,6 +120,7 @@ export default function MapView ({ aircraft, center, runways }) {
                             {a.status}
                             {a.gps === "degraded" && ` - GPS degraded (with NACp ${a.nacp} )` }
                             {a.gps === "mismatch" && ` - GPS/pressure altitude gap ${a.altGap} ft`}
+                            {a.airline && `${a.airline} -`}
                             {a.type && `${a.type} - `}
                             {a.reg && `${a.reg} - `}
 

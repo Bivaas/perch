@@ -70,6 +70,7 @@ export default async function AirportPage({ params }) {
         const watched = WATCHED.includes(code);
         let flights = [];
         let hourly = [];
+        const names = {};
 
         if (watched) {
 
@@ -83,6 +84,22 @@ export default async function AirportPage({ params }) {
                 .limit (20);
             
                 flights = data ?? [];
+
+                // load airlines
+                const prefixes = flights
+                    .filter((f) => /^[A-Z]{3}[0-9]/.test(f.callsign ?? ""))
+
+                    .map((f) => f.callsign.slice(0, 3));
+
+                const { data: airlines } = await supabase
+                    .from("airlines")
+                    .select("icao, name")
+                    .in("icao", prefixes);
+
+                for (const al of airlines ?? []) {
+
+                    names[al.icao] = al.name;
+                }
 
                 // hour count load
                 const { data: hours } = await supabase
@@ -173,7 +190,14 @@ export default async function AirportPage({ params }) {
 
                                 <li key={f.id} className="flex items-center gap-3 py-2 text-sm" >
 
-                                    <span className="flex-1 font-mono font-medium">{f.callsign ?? f.hex}</span>
+                                    <span className="flex-1 font-mono font-medium">
+                                        
+                                        {f.callsign ?? f.hex} -{" "}
+                                        {names[f.callsign?.slice(0, 3)] &&
+                                            `${names[f.callsign.slice(0, 3)]} -`}
+                                        {f.type} -{" "} 
+                                        
+                                    </span>
 
                                     <span className={`rounded-full px-2 py-0.5 text-sm ${TY_STYLE[f.type]}`}> {f.type} </span>
 
