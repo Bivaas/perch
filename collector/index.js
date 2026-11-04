@@ -2,7 +2,6 @@ import { createClient } from "@supabase/supabase-js";
 import { AIRPORTS, addRow, GAP_MINUTES, classify } from "./tracker.js";
 
 
-const RADIUS = 60;
 const POLL_SECONDS = 15;
 const SUPABASE_URL = "https://knzexkjvrsoeyxxzwqxl.supabase.co";
 
@@ -15,14 +14,14 @@ async function pollAirport(AIRPORT) {
     try {
 
         const current = (currentByAirport[AIRPORT.code] ??= {});
-        const url = `https://api.adsb.lol/v2/point/${AIRPORT.lat}/${AIRPORT.lon}/${RADIUS}`;
+        const url = `https://api.adsb.lol/v2/point/${AIRPORT.lat}/${AIRPORT.lon}/${AIRPORT.radius}`;
         
         const res = await fetch(url);
         const data = await res.json();
         const time = new Date().toISOString();
         const finished = [];
         
-        console.log(`${time} ${data.ac.length} aircraft within ${RADIUS} nm of ${AIRPORT.code}`);
+        console.log(`${time} ${data.ac.length} aircraft within ${AIRPORT.radius} nm of ${AIRPORT.code}`);
         
         for (const plane of data.ac) {
             
@@ -68,9 +67,12 @@ async function pollAirport(AIRPORT) {
             on_ground: plane.alt_baro === "ground",
         }));
 
-        const { error } = await supabase.from("positions").insert(rows);
+        if (AIRPORT.savePositions) {
 
-        if (error) console.log("err:", error.message);
+            const { error } = await supabase.from("positions").insert(rows);
+
+            if (error) console.log (error.message);
+        }
 
         // finished flight
         if (finished.length > 0) {

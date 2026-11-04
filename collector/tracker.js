@@ -1,14 +1,13 @@
 export const AIRPORTS = [
     {
-        code: "VNKT",
-        lat: 27.6966,
-        lon: 85.3591,
-        elev: 4390,
+        code: "VNKT", lat:27.6966, lon: 85.3591, elevFt: 4390, radius: 60, nearNm: 13, lowMarginFt: 7000, savePositions: true
+    },
+
+    {
+        code: "OMDB", lat: 25.2528, lon: 55.3644, elevFt: 62, radius: 30, nearNm: 3, lowMarginFt: 2000, savePositions
     }
 ];
 
-export const NEAR_NM = 13;
-export const LOW_MARGIN_FT = 7000;
 export const GAP_MINUTES = 10;
 
 // shortest distance
@@ -25,8 +24,8 @@ function distanceNm (lat, lon, airport) {
 
 export function classify(f, airport) {
 
-    const near = f.minDist <= NEAR_NM;
-    const low = f.minAlt <= airport.elev + LOW_MARGIN_FT;
+    const near = f.minDist <= airport.nearNm;
+    const low = f.minAlt <= airport.elevFt + airport.lowMarginFt;
 
     if (!near || !low ) return "other";
 
