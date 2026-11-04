@@ -4,7 +4,7 @@ export const AIRPORTS = [
     },
 
     {
-        code: "OMDB", lat: 25.2528, lon: 55.3644, elevFt: 62, radius: 30, nearNm: 3, lowMarginFt: 2000, savePositions
+        code: "OMDB", lat: 25.2528, lon: 55.3644, elevFt: 62, radius: 30, nearNm: 3, lowMarginFt: 2000, savePositions: false,
     }
 ];
 

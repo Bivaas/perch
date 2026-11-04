@@ -4,7 +4,7 @@ import LiveMap from "@/components/LiveMap";
 import { nepalTime } from "@/lib/nepalTime";
 import HourlyChart from "@/components/HourlyChart";
 
-const WATCHED = ["VNKT"];
+const WATCHED = {VNKT: "Asia/Kathmandu", OMDB: "Asia/Dubai"};
 
 const TY_STYLE = {
 
@@ -77,7 +77,8 @@ export default async function AirportPage({ params }) {
         }
 
         // recent views
-        const watched = WATCHED.includes(code);
+        const timeZone = WATCHED[code];
+        const watched = timeZone !== undefined;
         let flights = [];
         let hourly = [];
         const names = {};
@@ -113,10 +114,10 @@ export default async function AirportPage({ params }) {
 
                 // hour count load
                 const { data: hours } = await supabase
-
-                    .from("hourly_traffic")
-                    .select("hour, arrivals, departures")
-                    .eq("airport", code);
+                    .rpc("hourly_traffic_local", {
+                        p_airport: code,
+                        p_tz: timeZone,
+                    });
 
                 hourly = Array.from({ length: 24}, (_, hour) => {
 
@@ -231,7 +232,7 @@ export default async function AirportPage({ params }) {
            <Section title="recent arrivals and departures:">
 
                     {!watched ? (
-                        <p>history is only for VNKT</p>
+                        <p>history is only for VNKT & OMDB</p>
                     ) : flights.length === 0 ? (
 
                         <p className="text-sm">No finished flights so far</p>
