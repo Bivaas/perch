@@ -29,11 +29,11 @@ export function classify(f, airport) {
 
     if (!near || !low ) return "other";
 
-    if (f.firstAlt > f.lastAlt) return "arrival";
+    if (f.firstAlt === 0 && f.lastAlt === 0) return "on ground";
 
-    if (f.firstAlt < f.lastAlt) return "departure";
+    if (f.lastDist < f.firstDist ) return "arrival";
 
-    if (f.lastAlt === 0) return "on ground";
+    if (f.lastDist > f.firstDist) return "departure";
 
     return "unknown";
 }
@@ -61,6 +61,8 @@ export function addRow(current, row, airport) {
             minDist: Infinity,
             firstAlt: undefined,
             lastAlt: undefined,
+            firstDist: undefined,
+            lastDist: undefined,
         };
 
     } else {

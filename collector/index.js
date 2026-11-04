@@ -89,6 +89,8 @@ async function pollAirport(AIRPORT) {
                 min_dist_nm: f.minDist,
                 first_alt: f.firstAlt,
                 last_alt: f.lastAlt,
+                first_dist_nm: f.firstDist,
+                last_dist_nm: f.lastDist,
                 type: classify(f, AIRPORT),
             }));
 
