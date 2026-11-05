@@ -46,3 +46,8 @@ I used AI when asking help to get airport list and its ICAO since its very huge 
 - open-meteo.com
 - openstreetmap.org
 - openflights.org
+
+## Images
+
+*live traffic of OMDB (dubai international airport)*
+![Screenshot](uploads/demo.png)
