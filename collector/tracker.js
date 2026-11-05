@@ -87,6 +87,8 @@ export function addRow(current, row, airport) {
         const d = distanceNm(row.lat, row.lon, airport);
         const rounded = Math.round(d * 10) / 10;
         f.minDist = Math.min(f.minDist, rounded);
+        f.firstDist ??= rounded;
+        f.lastDist = rounded;
     }
 
     if (f !== flight) return flight;

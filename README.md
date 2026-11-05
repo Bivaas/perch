@@ -36,7 +36,7 @@ The main limitation being dependence in adsb.lol for all available data along wi
 
 ## use of AI
 
-I used AI when asking help to get airport list and its ICAO since its very huge number. It recommened a github repo which I used. It helped me to add airport runways in map (black bar). Other than that, I mostly used AI for debugging, fixing errors and in specific parts of UI design. 
+I used AI when asking help to get airport list and its ICAO since its very huge number. It recommened a github repo which I used. It helped me to add airport runways in map (black bar). Other than that, I mostly used AI for debugging, fixing errors and in specific parts of UI design.    
 
 ## Used
 
